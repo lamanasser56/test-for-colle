@@ -1,13 +1,18 @@
-name: Terraform Infrastructure Pipeline
+name: Terraform Validate and Plan (No Apply)
 
 on:
   push:
     branches:
       - main
+  pull_request:
 
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./terraform
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -17,16 +22,15 @@ jobs:
         with:
           terraform_version: 1.9.8
 
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Terraform Init (no backend)
+        run: terraform init -backend=false
 
-      - name: Terraform Init
-        run: terraform init
+      - name: Terraform Format check
+        run: terraform fmt -check -recursive
 
-      - name: Terraform Plan
-        run: terraform plan -out=tfplan
+      - name: Terraform Validate
+        run: terraform validate
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan
+      - name: Terraform Plan (simulation)
+        run: terraform plan -lock=false
+
