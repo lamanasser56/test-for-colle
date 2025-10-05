@@ -1,8 +1,8 @@
 # ============ Variables ============
 variable "resource_group_name" { type = string }
-variable "location"            { type = string }
-variable "tags"                { type = map(string) }
-variable "subnet_id"           { type = string }
+variable "location" { type = string }
+variable "tags" { type = map(string) }
+variable "subnet_id" { type = string }
 
 variable "sql_server_name" {
   type    = string
@@ -15,7 +15,7 @@ variable "sql_admin_login" {
 }
 
 variable "sql_admin_password" {
-  type    = string
+  type        = string
   description = "Admin password for SQL Server"
 }
 
@@ -27,11 +27,11 @@ variable "database_name" {
 # ============ SQL Server ============
 resource "azurerm_mssql_server" "this" {
   name                         = var.sql_server_name
-  resource_group_name           = var.resource_group_name
-  location                      = var.location
-  version                       = "12.0"
-  administrator_login           = var.sql_admin_login
-  administrator_login_password  = var.sql_admin_password
+  resource_group_name          = var.resource_group_name
+  location                     = var.location
+  version                      = "12.0"
+  administrator_login          = var.sql_admin_login
+  administrator_login_password = var.sql_admin_password
 
   public_network_access_enabled = false # 🔒 مهم للأمان
 
@@ -73,12 +73,12 @@ resource "azurerm_private_dns_zone" "sql_dns" {
 }
 
 resource "azurerm_private_dns_zone_group" "sql_dns_group" {
-  name                 = "sql-dns-group"
-  private_endpoint_id  = azurerm_private_endpoint.sql_pe.id
+  name                = "sql-dns-group"
+  private_endpoint_id = azurerm_private_endpoint.sql_pe.id
 
   private_dns_zone_configs {
-    name                  = azurerm_private_dns_zone.sql_dns.name
-    private_dns_zone_id   = azurerm_private_dns_zone.sql_dns.id
+    name                = azurerm_private_dns_zone.sql_dns.name
+    private_dns_zone_id = azurerm_private_dns_zone.sql_dns.id
   }
 }
 

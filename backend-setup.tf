@@ -22,7 +22,7 @@ resource "azurerm_storage_account" "tfstate" {
   location                 = azurerm_resource_group.tfstate.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
-  
+
   allow_nested_items_to_be_public = false
   min_tls_version                 = "TLS1_2"
 }
