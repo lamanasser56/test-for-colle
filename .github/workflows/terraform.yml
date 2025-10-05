@@ -2,8 +2,7 @@ name: Terraform Validate and Plan (No Apply)
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
   pull_request:
 
 jobs:
@@ -11,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./terraform
+        working-directory: ./terraform   
 
     steps:
       - name: Checkout repository
@@ -22,15 +21,16 @@ jobs:
         with:
           terraform_version: 1.9.8
 
+      
       - name: Terraform Init (no backend)
-        run: terraform init -backend=false
+        run: terraform init -backend=false -reconfigure -input=false
 
       - name: Terraform Format check
         run: terraform fmt -check -recursive
 
       - name: Terraform Validate
-        run: terraform validate
+        run: terraform validate -no-color
 
-      - name: Terraform Plan (simulation)
-        run: terraform plan -lock=false
+      - name: Terraform Plan (simulation, no backend)
+        run: terraform plan -lock=false -input=false -no-color
 
